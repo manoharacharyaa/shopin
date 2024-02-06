@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shopin/screens/product_details_screen.dart';
 
-class ProductItemWidget extends StatelessWidget {
-  const ProductItemWidget({
+class ProductItem extends StatelessWidget {
+  const ProductItem({
     super.key,
     required this.id,
     required this.title,
