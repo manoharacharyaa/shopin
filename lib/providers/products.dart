@@ -37,12 +37,27 @@ class Products extends ChangeNotifier {
     ),
   ];
 
+  var _showFavouritsOnly = false;
+
   List<Product> get items {
+    if (_showFavouritsOnly) {
+      return _items.where((prodItem) => prodItem.isFavourite).toList();
+    }
     return [..._items];
   }
 
   Product findById(String id) {
     return _items.firstWhere((prod) => prod.id == id);
+  }
+
+  void showFavouritsOnly() {
+    _showFavouritsOnly = true;
+    notifyListeners();
+  }
+
+  void showAll() {
+    _showFavouritsOnly = false;
+    notifyListeners();
   }
 
   void addProduct() {
