@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           appBarTheme: AppBarTheme(
-            centerTitle: true,
             titleTextStyle: GoogleFonts.poppins(
               fontSize: 30,
               fontWeight: FontWeight.w600,
