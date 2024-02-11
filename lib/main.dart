@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/products.dart';
 import 'package:shopin/screens/product_details_screen.dart';
 import 'package:shopin/screens/products_overview_screen.dart';
@@ -14,8 +15,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => Products(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => Products()),
+        ChangeNotifierProvider(create: (context) => Cart()),
+      ],
       child: MaterialApp(
         title: 'Shop App Using Provider',
         debugShowCheckedModeBanner: false,

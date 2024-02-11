@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/product.dart';
 import 'package:shopin/screens/product_details_screen.dart';
 
@@ -11,6 +12,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     // final product = Provider.of<Product>(context);
     final product = context.read<Product>();
+    final cart = context.watch<Cart>();
     final logger = Logger();
     logger.d('Procuct Rebuilds');
     logger.d(product.title);
@@ -40,7 +42,9 @@ class ProductItem extends StatelessWidget {
             ),
             title: Text(product.title),
             trailing: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                cart.addItem(product.id, product.price, product.title);
+              },
               icon: const Icon(Icons.shopping_cart),
             ),
           ),
