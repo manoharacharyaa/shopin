@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/products.dart';
+import 'package:shopin/screens/cart_screen.dart';
 import 'package:shopin/screens/product_details_screen.dart';
 import 'package:shopin/screens/products_overview_screen.dart';
 
@@ -34,11 +35,26 @@ class MyApp extends StatelessWidget {
           colorScheme: const ColorScheme.dark(
             background: Color.fromARGB(255, 36, 36, 36),
           ),
+          textTheme: TextTheme(
+            bodyLarge: GoogleFonts.poppins(
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+            ),
+            bodyMedium: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+            bodySmall: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
         ),
         home: const ProductsOverviewScreen(),
         routes: {
           ProductDetailsScreen.routeName: (context) =>
               const ProductDetailsScreen(),
+          CartScreen.routeName: (context) => const CartScreen(),
         },
       ),
     );
