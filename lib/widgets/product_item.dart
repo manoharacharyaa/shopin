@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
+import 'package:shopin/colors/colors.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/product.dart';
 import 'package:shopin/screens/product_details_screen.dart';
@@ -44,6 +45,40 @@ class ProductItem extends StatelessWidget {
             trailing: IconButton(
               onPressed: () {
                 cart.addItem(product.id, product.price, product.title);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.check_circle,
+                          color: green,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Added to cart',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      textColor: white,
+                      onPressed: () {
+                        cart.removeSingleItem(product.id);
+                      },
+                    ),
+                    duration: const Duration(seconds: 2),
+                    backgroundColor: blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8).copyWith(
+                        bottomLeft: const Radius.circular(0),
+                        bottomRight: const Radius.circular(0),
+                      ),
+                    ),
+                  ),
+                );
               },
               icon: const Icon(Icons.shopping_cart),
             ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:shopin/colors/colors.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/screens/cart_screen.dart';
 import 'package:shopin/widgets/app_drawer.dart';
