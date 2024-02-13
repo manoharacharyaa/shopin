@@ -8,6 +8,7 @@ import 'package:shopin/screens/cart_screen.dart';
 import 'package:shopin/screens/orders_screen.dart';
 import 'package:shopin/screens/product_details_screen.dart';
 import 'package:shopin/screens/products_overview_screen.dart';
+import 'package:shopin/screens/user_product_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,17 +40,17 @@ class MyApp extends StatelessWidget {
             background: Color.fromARGB(255, 36, 36, 36),
           ),
           textTheme: TextTheme(
-            bodyLarge: GoogleFonts.poppins(
-              fontSize: 30,
-              fontWeight: FontWeight.w600,
+            bodySmall: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
             ),
             bodyMedium: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
-            bodySmall: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+            bodyLarge: GoogleFonts.poppins(
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
             ),
             titleSmall: GoogleFonts.poppins(
               fontSize: 15,
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
               const ProductDetailsScreen(),
           CartScreen.routeName: (context) => const CartScreen(),
           OrdersScreen.routeName: (context) => const OrdersScreen(),
+          UserProductScreen.routeName: (context) => const UserProductScreen(),
         },
       ),
     );
