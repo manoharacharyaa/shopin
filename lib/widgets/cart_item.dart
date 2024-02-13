@@ -43,7 +43,7 @@ class CartItem extends StatelessWidget {
           margin: const EdgeInsets.all(10),
           color: blue,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(15),
           ),
           child: Padding(
             padding: const EdgeInsets.all(10),

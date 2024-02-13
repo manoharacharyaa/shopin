@@ -5,6 +5,7 @@ import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/orders.dart';
 import 'package:shopin/providers/products.dart';
 import 'package:shopin/screens/cart_screen.dart';
+import 'package:shopin/screens/orders_screen.dart';
 import 'package:shopin/screens/product_details_screen.dart';
 import 'package:shopin/screens/products_overview_screen.dart';
 
@@ -50,6 +51,10 @@ class MyApp extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
+            titleSmall: GoogleFonts.poppins(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         home: const ProductsOverviewScreen(),
@@ -57,6 +62,7 @@ class MyApp extends StatelessWidget {
           ProductDetailsScreen.routeName: (context) =>
               const ProductDetailsScreen(),
           CartScreen.routeName: (context) => const CartScreen(),
+          OrdersScreen.routeName: (context) => const OrdersScreen(),
         },
       ),
     );

@@ -25,7 +25,7 @@ class CartScreen extends StatelessWidget {
             child: Card(
               margin: const EdgeInsets.all(10),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(15),
               ),
               color: blue,
               child: Padding(
