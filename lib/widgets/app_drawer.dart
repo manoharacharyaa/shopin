@@ -20,9 +20,7 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.shop),
             title: Text(
               'Shop',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontSize: 25,
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/');
@@ -32,21 +30,17 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.payment),
             title: Text(
               'Orders',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontSize: 25,
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             onTap: () {
               Navigator.pushReplacementNamed(context, OrdersScreen.routeName);
             },
           ),
           ListTile(
-            leading: const Icon(Icons.edit),
+            leading: const Icon(Icons.edit_calendar_outlined),
             title: Text(
               'Manage Product',
-              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                    fontSize: 25,
-                  ),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             onTap: () {
               Navigator.pushReplacementNamed(

@@ -26,9 +26,19 @@ class _OrderItemState extends State<OrderItem> {
       child: Column(
         children: [
           ListTile(
-            title: Text('\$${widget.order.amount}'),
-            subtitle: Text(
-              DateFormat('dd/MM/yyyy  hh:mm').format(widget.order.dateTime),
+            title: Text(
+              '\$${widget.order.amount}',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontSize: 24),
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Text(
+                DateFormat.yMd().add_jm().format(widget.order.dateTime),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
             trailing: IconButton(
               onPressed: () {

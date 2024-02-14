@@ -55,10 +55,10 @@ class ProductItem extends StatelessWidget {
                           Icons.check_circle,
                           color: green,
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 5),
                         Text(
-                          'Added to cart',
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          '${product.title} added',
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
                       ],
                     ),
