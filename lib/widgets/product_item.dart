@@ -83,7 +83,7 @@ class ProductItem extends StatelessWidget {
               icon: const Icon(Icons.shopping_cart),
             ),
           ),
-          child: Image.asset(
+          child: Image.network(
             product.imageUrl,
             fit: BoxFit.cover,
           ),

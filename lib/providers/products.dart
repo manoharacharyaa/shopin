@@ -9,7 +9,7 @@ class Products extends ChangeNotifier {
       description:
           'The most powerful Phone in the world, powered by Apples A17 Pro chip which suports ray tracing, with pro-motion Retina display, Grade 5 Titanium ',
       price: 1150,
-      imageUrl: 'assets/images/iphone.png',
+      imageUrl: 'https://shorturl.at/bqwL4',
     ),
     Product(
       id: 'p2',
@@ -17,7 +17,7 @@ class Products extends ChangeNotifier {
       description:
           'The best Android phone in th world, powered by Snapdragon 8 Gen 3 chip for galaxy with the best display in the world, its made with Grade 2 Titanium',
       price: 1000,
-      imageUrl: 'assets/images/samsung.png',
+      imageUrl: 'https://shorturl.at/jrxAX',
     ),
     Product(
       id: 'p3',
@@ -25,7 +25,7 @@ class Products extends ChangeNotifier {
       description:
           'The best Camera phone in the world, powered by Tensor G3 chip, it houses a lot of AI features, it has Clean Stock Android',
       price: 800,
-      imageUrl: 'assets/images/pixel.png',
+      imageUrl: 'https://shorturl.at/bfhlp',
     ),
     Product(
       id: 'p4',
@@ -33,7 +33,7 @@ class Products extends ChangeNotifier {
       description:
           'The value for money smartphone in the world, powered by Snapdragon 8 Gen 3 chip, it provides best overall package with good display, camera & performance',
       price: 700,
-      imageUrl: 'assets/images/oneplus.png',
+      imageUrl: 'https://rb.gy/rdte09',
     ),
   ];
 
@@ -64,8 +64,25 @@ class Products extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct() {
-    // _items.add(value);
+  void addProduct(Product product) {
+    final newProduct = Product(
+      id: DateTime.now().toString(),
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      imageUrl: product.imageUrl,
+    );
+    _items.add(newProduct);
+    notifyListeners();
+  }
+
+  void updateProduct(String id, Product newProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+    } else {
+      print('...');
+    }
     notifyListeners();
   }
 }
