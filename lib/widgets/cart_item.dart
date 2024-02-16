@@ -85,11 +85,12 @@ class CartItem extends StatelessWidget {
               ),
               title: Text(
                 title,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodySmall,
+                maxLines: 1,
               ),
               subtitle: Text(
                 'Total: \$${(price * quantity)}',
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.titleSmall,
               ),
               trailing: Text(
                 '$quantity X',

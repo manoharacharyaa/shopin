@@ -33,9 +33,11 @@ class CartScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Total',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                    Flexible(
+                      child: Text(
+                        'Total',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
                     Chip(
                       label: Text(
@@ -48,20 +50,33 @@ class CartScreen extends StatelessWidget {
                       side: BorderSide.none,
                       backgroundColor: transparentBlue,
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Provider.of<Orders>(context, listen: false).addOrder(
-                          cart.items.values.toList(),
-                          cart.totalAmount,
-                        );
-                        cart.clear();
-                      },
-                      child: Text(
-                        'ORDER NOW',
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                    Flexible(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Provider.of<Orders>(context, listen: false).addOrder(
+                            cart.items.values.toList(),
+                            cart.totalAmount,
+                          );
+                          cart.clear();
+                        },
+                        style: ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
+                          ),
+                          backgroundColor:
+                              const MaterialStatePropertyAll(white),
+                        ),
+                        child: Text(
+                          'ORDER',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
+                        ),
                       ),
                     ),
                   ],
