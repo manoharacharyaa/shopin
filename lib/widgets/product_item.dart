@@ -11,9 +11,10 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final product = Provider.of<Product>(context);
-    final product = context.read<Product>();
-    final cart = context.watch<Cart>();
+    final product = Provider.of<Product>(context);
+    final cart = Provider.of<Cart>(context);
+    // final product = context.read<Product>();
+    // final cart = context.watch<Cart>();
     final logger = Logger();
     logger.d('Procuct Rebuilds');
     logger.d(product.title);
