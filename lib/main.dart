@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shopin/colors/colors.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/orders.dart';
 import 'package:shopin/providers/products.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
           colorScheme: const ColorScheme.dark(
-            background: Color.fromARGB(255, 36, 36, 36),
+            background: kbackground,
           ),
           textTheme: TextTheme(
             bodySmall: GoogleFonts.poppins(
