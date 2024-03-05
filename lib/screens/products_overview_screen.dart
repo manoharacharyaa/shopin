@@ -6,6 +6,8 @@ import 'package:shopin/screens/cart_screen.dart';
 import 'package:shopin/widgets/app_drawer.dart';
 import 'package:shopin/widgets/badge_widget.dart';
 import 'package:shopin/widgets/products_grid.dart';
+import 'package:shopin/providers/products.dart';
+import 'package:shopin/widgets/progress_indicator.dart';
 
 enum FilterOptions {
   favourites,
@@ -21,6 +23,32 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showOnlyFavouyrites = false;
+  var _isInit = true;
+  var _isLoading = false;
+
+  // @override
+  // void initState() {
+  //   Future.delayed(Duration.zero).then((_) {
+  //     Provider.of<Products>(context).fetchAndSetProduct();
+  //   });
+  //   super.initState();
+  // }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context).fetchAndSetProduct().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +95,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductsGrid(showFavs: _showOnlyFavouyrites),
+      body: _isLoading
+          ? const CustomProgressIndicator()
+          : ProductsGrid(showFavs: _showOnlyFavouyrites),
     );
   }
 }
