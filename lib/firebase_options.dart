@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '230870401634',
     projectId: 'shopin-379ad',
     authDomain: 'shopin-379ad.firebaseapp.com',
+    databaseURL: 'https://shopin-379ad-default-rtdb.firebaseio.com',
     storageBucket: 'shopin-379ad.appspot.com',
     measurementId: 'G-NQHR68ZELX',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:230870401634:android:f07d752534e70605c3c73b',
     messagingSenderId: '230870401634',
     projectId: 'shopin-379ad',
+    databaseURL: 'https://shopin-379ad-default-rtdb.firebaseio.com',
     storageBucket: 'shopin-379ad.appspot.com',
   );
 
@@ -66,6 +68,7 @@ class DefaultFirebaseOptions {
     appId: '1:230870401634:ios:5039b3d7045eca66c3c73b',
     messagingSenderId: '230870401634',
     projectId: 'shopin-379ad',
+    databaseURL: 'https://shopin-379ad-default-rtdb.firebaseio.com',
     storageBucket: 'shopin-379ad.appspot.com',
     iosBundleId: 'com.example.shopin',
   );
@@ -75,6 +78,7 @@ class DefaultFirebaseOptions {
     appId: '1:230870401634:ios:b5e6d118943c7ef0c3c73b',
     messagingSenderId: '230870401634',
     projectId: 'shopin-379ad',
+    databaseURL: 'https://shopin-379ad-default-rtdb.firebaseio.com',
     storageBucket: 'shopin-379ad.appspot.com',
     iosBundleId: 'com.example.shopin.RunnerTests',
   );

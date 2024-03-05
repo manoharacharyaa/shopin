@@ -21,6 +21,7 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _showOnlyFavouyrites = false;
+
   @override
   Widget build(BuildContext context) {
     final logger = Logger();
