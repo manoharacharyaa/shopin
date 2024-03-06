@@ -67,7 +67,7 @@ class Products extends ChangeNotifier {
   // }
 
   Future<void> fetchAndSetProduct() async {
-    String url =
+    const url =
         'https://shopin-379ad-default-rtdb.firebaseio.com/products.json';
     Uri uri = Uri.parse(url);
     try {
@@ -93,7 +93,7 @@ class Products extends ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    String url =
+    const url =
         'https://shopin-379ad-default-rtdb.firebaseio.com/products.json';
     Uri uri = Uri.parse(url);
     try {
@@ -122,9 +122,21 @@ class Products extends ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      final url =
+          'https://shopin-379ad-default-rtdb.firebaseio.com/products/$id.json';
+      Uri uri = Uri.parse(url);
+      await http.patch(
+        uri,
+        body: jsonEncode({
+          'title': newProduct.title,
+          'description': newProduct.description,
+          'imageUrl': newProduct.imageUrl,
+          'price': newProduct.price,
+        }),
+      );
       _items[prodIndex] = newProduct;
     } else {
       print('...');

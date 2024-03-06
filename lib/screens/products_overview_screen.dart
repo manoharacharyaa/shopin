@@ -50,8 +50,14 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     super.didChangeDependencies();
   }
 
+  Future<void> _refreshProducts(BuildContext context) async {
+    await Provider.of<Products>(context, listen: false).fetchAndSetProduct();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final products = Provider.of<Products>(context).items;
+    final fetch = Provider.of<Products>(context).fetchAndSetProduct();
     final logger = Logger();
     return Scaffold(
       appBar: AppBar(
@@ -96,7 +102,9 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       ),
       drawer: const AppDrawer(),
       body: _isLoading
-          ? const CustomProgressIndicator()
+          ? (products.isEmpty
+              ? const Center(child: Text('No Products Found'))
+              : const CustomProgressIndicator())
           : ProductsGrid(showFavs: _showOnlyFavouyrites),
     );
   }
