@@ -68,7 +68,7 @@ class Products extends ChangeNotifier {
   // }
 
   Future<void> fetchAndSetProduct() async {
-    const url =
+    String url =
         'https://shopin-379ad-default-rtdb.firebaseio.com/products.json';
     Uri uri = Uri.parse(url);
     try {

@@ -97,9 +97,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       ),
       drawer: const AppDrawer(),
       body: _isLoading
-          ? (products.isEmpty
-              ? const Center(child: Text('No Products Found'))
-              : const CustomProgressIndicator())
+          ? const CustomProgressIndicator()
           : ProductsGrid(showFavs: _showOnlyFavouyrites),
     );
   }
