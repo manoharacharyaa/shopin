@@ -50,35 +50,7 @@ class CartScreen extends StatelessWidget {
                       side: BorderSide.none,
                       backgroundColor: transparentBlue,
                     ),
-                    Flexible(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Provider.of<Orders>(context, listen: false).addOrder(
-                            cart.items.values.toList(),
-                            cart.totalAmount,
-                          );
-                          cart.clear();
-                        },
-                        style: ButtonStyle(
-                          shape: MaterialStatePropertyAll(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          backgroundColor:
-                              const MaterialStatePropertyAll(white),
-                        ),
-                        child: Text(
-                          'ORDER',
-                          style:
-                              Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black,
-                                  ),
-                        ),
-                      ),
-                    ),
+                    OrderButton(cart: cart),
                   ],
                 ),
               ),
@@ -101,6 +73,70 @@ class CartScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    super.key,
+    required this.cart,
+  });
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return Flexible(
+      child: _isLoading
+          ? Container(
+              height: 30,
+              width: 50,
+              padding: const EdgeInsets.only(left: 20),
+              child: const CircularProgressIndicator(
+                color: white,
+              ),
+            )
+          : ElevatedButton(
+              onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+                  ? null
+                  : () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await Provider.of<Orders>(context, listen: false)
+                          .addOrder(
+                        widget.cart.items.values.toList(),
+                        widget.cart.totalAmount,
+                      );
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      widget.cart.clear();
+                    },
+              style: ButtonStyle(
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                backgroundColor: const MaterialStatePropertyAll(white),
+              ),
+              child: Text(
+                'ORDER',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+              ),
+            ),
     );
   }
 }

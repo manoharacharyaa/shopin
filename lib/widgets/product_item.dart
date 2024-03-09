@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shopin/colors/colors.dart';
 import 'package:shopin/providers/cart.dart';
@@ -15,9 +14,6 @@ class ProductItem extends StatelessWidget {
     final cart = Provider.of<Cart>(context);
     // final product = context.read<Product>();
     // final cart = context.watch<Cart>();
-    final logger = Logger();
-    logger.d('Procuct Rebuilds');
-    logger.d(product.title);
 
     return InkWell(
       onTap: () {
@@ -25,7 +21,6 @@ class ProductItem extends StatelessWidget {
           ProductDetailsScreen.routeName,
           arguments: product.id,
         );
-        logger.d(product.id);
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
