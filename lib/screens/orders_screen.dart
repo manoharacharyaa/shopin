@@ -5,47 +5,41 @@ import 'package:shopin/widgets/app_drawer.dart';
 import 'package:shopin/widgets/order_item.dart';
 import 'package:shopin/widgets/progress_indicator.dart';
 
-class OrdersScreen extends StatefulWidget {
+class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
 
   static const routeName = '/orders';
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
-}
-
-class _OrdersScreenState extends State<OrdersScreen> {
-  var _isLoading = false;
-  @override
-  void initState() {
-    Future.delayed(Duration.zero).then((_) async {
-      setState(() {
-        _isLoading = true;
-      });
-      await Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final orderData = context.read<Orders>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('YOUR ORDERS'),
       ),
       drawer: const AppDrawer(),
-      body: _isLoading
-          ? const CustomProgressIndicator()
-          : ListView.builder(
-              itemCount: orderData.orders.length,
-              itemBuilder: (context, index) {
-                return OrderItem(order: orderData.orders[index]);
-              },
-            ),
+      body: FutureBuilder(
+        future: Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CustomProgressIndicator();
+          } else {
+            if (snapshot.error != null) {
+              return const Center(
+                child: Text('An error occured'),
+              );
+            } else {
+              return Consumer<Orders>(
+                builder: (context, orderData, child) => ListView.builder(
+                  itemCount: orderData.orders.length,
+                  itemBuilder: (context, index) {
+                    return OrderItem(order: orderData.orders[index]);
+                  },
+                ),
+              );
+            }
+          }
+        },
+      ),
     );
   }
 }
