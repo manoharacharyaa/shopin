@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/screens/cart_screen.dart';
@@ -52,8 +51,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final products = Provider.of<Products>(context).items;
-    final logger = Logger();
     return Scaffold(
       appBar: AppBar(
         title: const Text('SHOPIN'),
@@ -61,7 +58,6 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           PopupMenuButton(
             onSelected: (selectedValue) {
               setState(() {
-                logger.d(selectedValue);
                 if (selectedValue == FilterOptions.favourites) {
                   _showOnlyFavouyrites = true;
                 } else {

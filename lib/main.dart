@@ -5,13 +5,13 @@ import 'package:shopin/firebase_options.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/orders.dart';
 import 'package:shopin/providers/products.dart';
+import 'package:shopin/auth_screen.dart';
 import 'package:shopin/screens/cart_screen.dart';
 import 'package:shopin/screens/orders_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shopin/screens/edit_product_screen.dart';
 import 'package:shopin/screens/product_details_screen.dart';
-import 'package:shopin/screens/products_overview_screen.dart';
 import 'package:shopin/screens/user_product_screen.dart';
 
 void main() async {
@@ -66,7 +66,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const ProductsOverviewScreen(),
+        // home: const ProductsOverviewScreen(),
+        home: const AuthScreen(),
         routes: {
           ProductDetailsScreen.routeName: (context) =>
               const ProductDetailsScreen(),
