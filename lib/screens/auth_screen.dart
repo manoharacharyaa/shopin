@@ -1,82 +1,298 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:shopin/colors/colors.dart';
 
-enum AuthMode {
-  signup,
-  login,
-}
-
-class AuthScreen extends StatelessWidget {
-  static const routeName = '/auth';
-
+class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
   @override
+  State<AuthScreen> createState() => _AuthScreenState();
+}
+
+class _AuthScreenState extends State<AuthScreen> {
+  int? tabVal;
+  bool isVisible = false;
+  bool isEqual = false;
+  bool _isLoading = false;
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  TextEditingController loginEmailController = TextEditingController();
+  TextEditingController signupEmailController = TextEditingController();
+  TextEditingController loginPasswordController = TextEditingController();
+  TextEditingController signupPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  final Map<String, String> _authData = {
+    'email': '',
+    'password': '',
+  };
+
+  void _submit() {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    _formKey.currentState?.save();
+
+    // setState(() {
+    //   _isLoading = true;
+    // });
+    // setState(() {
+    //   _isLoading = false;
+    // });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-    // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
-    // transformConfig.translate(-10.0);
+    final deviceSize = MediaQuery.sizeOf(context);
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       body: Stack(
-        children: <Widget>[
+        children: [
           Container(
-            decoration: BoxDecoration(
+            height: deviceSize.height,
+            width: deviceSize.width,
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromARGB(255, 117, 124, 255).withOpacity(0.5),
-                  const Color.fromARGB(255, 21, 76, 255).withOpacity(0.9),
+                  Color.fromARGB(255, 19, 71, 243),
+                  Color.fromARGB(255, 1, 23, 221),
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: const [0, 1],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomLeft,
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: SizedBox(
-              height: deviceSize.height,
-              width: deviceSize.width,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Flexible(
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 20.0),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 94.0),
-                      transform: Matrix4.rotationZ(-8 * pi / 180)
-                        ..translate(-10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Colors.deepOrange.shade900,
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 8,
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                          )
+          Center(
+            child: Container(
+              height: tabVal == 1
+                  ? deviceSize.height * 0.45
+                  : deviceSize.height * 0.55,
+              width: deviceSize.width * 0.90,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    const Color.fromARGB(255, 212, 227, 255).withOpacity(0.5),
+                    const Color.fromARGB(255, 204, 222, 238).withOpacity(0.5),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Form(
+                key: _formKey,
+                child: DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      TabBar(
+                        onTap: (value) {
+                          setState(() {
+                            tabVal = value;
+                          });
+                        },
+                        padding: const EdgeInsets.symmetric(vertical: 25),
+                        dividerColor: Colors.transparent,
+                        indicatorColor: white,
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicatorPadding:
+                            const EdgeInsets.symmetric(horizontal: 40),
+                        tabs: [
+                          Text(
+                            'SignUp',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            'Login',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
                         ],
                       ),
-                      child: const Text(
-                        'MyShop',
-                        style: TextStyle(
-                          color: blue,
-                          fontSize: 50,
-                          fontFamily: 'Anton',
-                          fontWeight: FontWeight.normal,
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  CustomFormField(
+                                    deviceSize: deviceSize,
+                                    hintText: 'Email',
+                                    keyboardType: TextInputType.emailAddress,
+                                    controller: signupEmailController,
+                                    validator: (value) {
+                                      if (value!.isEmpty ||
+                                          !value.contains('@')) {
+                                        return 'Invalid email!';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  const SizedBox(height: 25),
+                                  CustomFormField(
+                                    deviceSize: deviceSize,
+                                    hintText: 'Password',
+                                    obscureText: isVisible ? false : true,
+                                    controller: signupPasswordController,
+                                    validator: (value) {
+                                      if (value!.isEmpty || value.length < 5) {
+                                        return 'Password is too short!';
+                                      }
+                                      return null;
+                                    },
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isVisible = !isVisible;
+                                        });
+                                      },
+                                      icon: isVisible
+                                          ? const Icon(Icons.visibility)
+                                          : const Icon(Icons.visibility_off),
+                                    ),
+                                    onChanged: (_) {
+                                      if (signupEmailController.text !=
+                                          confirmPasswordController.text) {
+                                        setState(() {
+                                          isEqual = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          isEqual = true;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  const SizedBox(height: 25),
+                                  CustomFormField(
+                                    deviceSize: deviceSize,
+                                    hintText: 'Confirm Password',
+                                    obscureText: true,
+                                    controller: confirmPasswordController,
+                                    validator: (value) {
+                                      if (value !=
+                                          signupPasswordController.text) {
+                                        return 'Passwords do not match!';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (_) {
+                                      if (signupPasswordController.text !=
+                                          confirmPasswordController.text) {
+                                        setState(() {
+                                          isEqual = false;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          isEqual = true;
+                                        });
+                                      }
+                                    },
+                                    suffixIcon:
+                                        confirmPasswordController.text.isEmpty
+                                            ? null
+                                            : isEqual == true
+                                                ? const Icon(
+                                                    Icons.check_circle,
+                                                    color: green,
+                                                  )
+                                                : const Icon(
+                                                    Icons.cancel_rounded,
+                                                    color: red,
+                                                  ),
+                                  ),
+                                  const SizedBox(height: 50),
+                                  Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: MaterialButton(
+                                      onPressed: _submit,
+                                      height: 50,
+                                      minWidth: deviceSize.width,
+                                      color: Colors.black38,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Text(
+                                        'SignUp',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  CustomFormField(
+                                    deviceSize: deviceSize,
+                                    hintText: 'Email',
+                                    controller: loginEmailController,
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) {
+                                      if (value!.isEmpty ||
+                                          !value.contains('@')) {
+                                        return 'Invalid email!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      _authData['email'] = value!;
+                                    },
+                                  ),
+                                  const SizedBox(height: 25),
+                                  CustomFormField(
+                                    deviceSize: deviceSize,
+                                    hintText: 'Password',
+                                    obscureText: isVisible ? false : true,
+                                    controller: loginPasswordController,
+                                    validator: (value) {
+                                      if (value!.isEmpty || value.length < 5) {
+                                        return 'Password is too short!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      _authData['password'] = value!;
+                                    },
+                                    suffixIcon: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          isVisible = !isVisible;
+                                        });
+                                      },
+                                      icon: isVisible
+                                          ? const Icon(Icons.visibility)
+                                          : const Icon(Icons.visibility_off),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 50),
+                                  Padding(
+                                    padding: const EdgeInsets.all(15),
+                                    child: MaterialButton(
+                                      onPressed: _submit,
+                                      height: 50,
+                                      minWidth: deviceSize.width,
+                                      color: Colors.black38,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        'Login',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  Flexible(
-                    flex: deviceSize.width > 600 ? 2 : 1,
-                    child: const AuthCard(),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -86,131 +302,63 @@ class AuthScreen extends StatelessWidget {
   }
 }
 
-class AuthCard extends StatefulWidget {
-  const AuthCard({super.key});
+class CustomFormField extends StatelessWidget {
+  const CustomFormField({
+    super.key,
+    required this.deviceSize,
+    required this.hintText,
+    required this.controller,
+    this.obscureText = false,
+    this.onPressed,
+    this.icon,
+    this.suffixIcon,
+    this.keyboardType,
+    this.onSaved,
+    this.validator,
+    this.onChanged,
+  });
 
-  @override
-  State<AuthCard> createState() => _AuthCardState();
-}
-
-class _AuthCardState extends State<AuthCard> {
-  final GlobalKey<FormState> _formKey = GlobalKey();
-  AuthMode _authMode = AuthMode.login;
-  final Map<String, String> _authData = {
-    'email': '',
-    'password': '',
-  };
-  var _isLoading = false;
-  final _passwordController = TextEditingController();
-
-  void _submit() {
-    if (!_formKey.currentState!.validate()) {
-      // Invalid!
-      return;
-    }
-    _formKey.currentState?.save();
-    setState(() {
-      _isLoading = true;
-    });
-    if (_authMode == AuthMode.login) {
-      // Log user in
-    } else {
-      // Sign user up
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void _switchAuthMode() {
-    if (_authMode == AuthMode.login) {
-      setState(() {
-        _authMode = AuthMode.signup;
-      });
-    } else {
-      setState(() {
-        _authMode = AuthMode.login;
-      });
-    }
-  }
+  final String hintText;
+  final Size deviceSize;
+  final bool obscureText;
+  final TextEditingController controller;
+  final void Function()? onPressed;
+  final IconData? icon;
+  final Widget? suffixIcon;
+  final TextInputType? keyboardType;
+  final void Function(String?)? onSaved;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      elevation: 8.0,
-      child: Container(
-        height: _authMode == AuthMode.signup ? 320 : 260,
-        constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.signup ? 320 : 260),
-        width: deviceSize.width * 0.75,
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(children: [
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'E-Mail'),
-                keyboardType: TextInputType.emailAddress,
-                validator: (value) {
-                  if (value!.isEmpty || value.contains('@')) {
-                    return 'Invalid email!';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _authData['email'] = value!;
-                },
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                controller: _passwordController,
-                validator: (value) {
-                  if (value!.isEmpty || value.length < 5) {
-                    return 'Password is too short!';
-                  }
-                },
-                onSaved: (value) {
-                  _authData['password'] = value!;
-                },
-              ),
-              if (_authMode == AuthMode.signup)
-                TextFormField(
-                  enabled: _authMode == AuthMode.signup,
-                  decoration:
-                      const InputDecoration(labelText: 'Confirm Password'),
-                  obscureText: true,
-                  validator: _authMode == AuthMode.signup
-                      ? (value) {
-                          if (value != _passwordController.text) {
-                            return 'Passwords do not match!';
-                          }
-                        }
-                      : null,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          TextFormField(
+            controller: controller,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
+            style: Theme.of(context).textTheme.bodySmall,
+            decoration: InputDecoration(
+              focusedBorder: const UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: white,
                 ),
-              const SizedBox(
-                height: 20,
               ),
-              if (_isLoading)
-                const CircularProgressIndicator()
-              else
-                ElevatedButton(
-                  onPressed: _submit,
-                  child:
-                      Text(_authMode == AuthMode.login ? 'LOGIN' : 'SIGN UP'),
-                ),
-              ElevatedButton(
-                onPressed: _switchAuthMode,
-                child: Text(
-                    '${_authMode == AuthMode.login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-              ),
-            ]),
+              hintText: hintText,
+              hintStyle: Theme.of(context).textTheme.bodySmall,
+              suffixIcon: suffixIcon,
+            ),
+            cursorColor: white,
+            cursorErrorColor: Colors.red,
+            onSaved: onSaved,
+            validator: validator,
+            onChanged: onChanged,
           ),
-        ),
+        ],
       ),
     );
   }

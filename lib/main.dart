@@ -5,7 +5,7 @@ import 'package:shopin/firebase_options.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/orders.dart';
 import 'package:shopin/providers/products.dart';
-import 'package:shopin/auth_screen.dart';
+import 'package:shopin/screens/auth_screen.dart';
 import 'package:shopin/screens/cart_screen.dart';
 import 'package:shopin/screens/orders_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
