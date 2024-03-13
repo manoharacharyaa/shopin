@@ -13,6 +13,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   int? tabVal;
+  bool _isLoading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController loginEmailController = TextEditingController();
@@ -26,6 +27,19 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
     _formKey.currentState?.save();
+  }
+
+  Future<void> _signUp() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Provider.of<Auth>(context, listen: false).signUp(
+      signupEmailController.text,
+      signupPasswordController.text,
+    );
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -177,19 +191,26 @@ class _AuthScreenState extends State<AuthScreen> {
                                   Padding(
                                     padding: const EdgeInsets.all(15),
                                     child: MaterialButton(
-                                      onPressed: _submit,
+                                      onPressed: () {
+                                        _submit();
+                                        _signUp();
+                                      },
                                       height: 50,
                                       minWidth: deviceSize.width,
                                       color: Colors.black38,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: Text(
-                                        'SignUp',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
+                                      child: _isLoading
+                                          ? const CircularProgressIndicator(
+                                              color: white,
+                                            )
+                                          : Text(
+                                              'SignUp',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium,
+                                            ),
                                     ),
                                   ),
                                 ],
