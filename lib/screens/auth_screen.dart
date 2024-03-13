@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopin/colors/colors.dart';
+import 'package:shopin/models/http_exception.dart';
 import 'package:shopin/providers/auth.dart';
 import 'package:shopin/widgets/custom_formfield.dart';
 
@@ -22,6 +23,34 @@ class _AuthScreenState extends State<AuthScreen> {
   TextEditingController signupPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  @override
+  void dispose() {
+    loginEmailController.dispose();
+    signupEmailController.dispose();
+    loginPasswordController.dispose();
+    signupPasswordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('An error occured'),
+        content: Text(message),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('Okay'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _submit() {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -33,10 +62,29 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<Auth>(context, listen: false).signUp(
-      signupEmailController.text,
-      signupPasswordController.text,
-    );
+    try {
+      await Provider.of<Auth>(context, listen: false).signUp(
+        signupEmailController.text,
+        signupPasswordController.text,
+      );
+    } on HttpException catch (e) {
+      var errorMessage = 'Authinticate Failed';
+      if (e.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email exists';
+      } else if (e.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'Invalid Email';
+      } else if (e.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Password is too weak';
+      } else if (e.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Could not find user with this email';
+      } else if (e.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Invalid Password';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (e) {
+      const errorMessage = 'Could not authinticate. Plese try again later';
+      _showErrorDialog(errorMessage);
+    }
     setState(() {
       _isLoading = false;
     });
@@ -46,10 +94,30 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       _isLoading = true;
     });
-    await Provider.of<Auth>(context, listen: false).login(
-      loginEmailController.text,
-      loginPasswordController.text,
-    );
+    try {
+      await Provider.of<Auth>(context, listen: false).login(
+        loginEmailController.text,
+        loginPasswordController.text,
+      );
+    } on HttpException catch (e) {
+      var errorMessage = 'Authinticate Failed';
+      if (e.toString().contains('EMAIL_EXISTS')) {
+        errorMessage = 'This email exists';
+      } else if (e.toString().contains('INVALID_EMAIL')) {
+        errorMessage = 'Invalid Email';
+      } else if (e.toString().contains('WEAK_PASSWORD')) {
+        errorMessage = 'Password is too weak';
+      } else if (e.toString().contains('EMAIL_NOT_FOUND')) {
+        errorMessage = 'Could not find user with this email';
+      } else if (e.toString().contains('INVALID_PASSWORD')) {
+        errorMessage = 'Invalid Password';
+      }
+      _showErrorDialog(errorMessage);
+    } catch (e) {
+      const errorMessage = 'Could not authinticate. Plese try again later';
+      _showErrorDialog(errorMessage);
+    }
+
     setState(() {
       _isLoading = false;
     });
