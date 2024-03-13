@@ -42,6 +42,19 @@ class _AuthScreenState extends State<AuthScreen> {
     });
   }
 
+  Future<void> _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await Provider.of<Auth>(context, listen: false).login(
+      loginEmailController.text,
+      loginPasswordController.text,
+    );
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.sizeOf(context);
@@ -188,30 +201,13 @@ class _AuthScreenState extends State<AuthScreen> {
                                                   ),
                                   ),
                                   const SizedBox(height: 50),
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: MaterialButton(
-                                      onPressed: () {
-                                        _submit();
-                                        _signUp();
-                                      },
-                                      height: 50,
-                                      minWidth: deviceSize.width,
-                                      color: Colors.black38,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: _isLoading
-                                          ? const CircularProgressIndicator(
-                                              color: white,
-                                            )
-                                          : Text(
-                                              'SignUp',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium,
-                                            ),
-                                    ),
+                                  CustomButton(
+                                    isLoading: _isLoading,
+                                    onPressed: () {
+                                      _submit();
+                                      _signUp();
+                                    },
+                                    text: 'SignUp',
                                   ),
                                 ],
                               ),
@@ -254,23 +250,13 @@ class _AuthScreenState extends State<AuthScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 50),
-                                  Padding(
-                                    padding: const EdgeInsets.all(15),
-                                    child: MaterialButton(
-                                      onPressed: _submit,
-                                      height: 50,
-                                      minWidth: deviceSize.width,
-                                      color: Colors.black38,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        'Login',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium,
-                                      ),
-                                    ),
+                                  CustomButton(
+                                    isLoading: _isLoading,
+                                    onPressed: () {
+                                      _submit();
+                                      _login();
+                                    },
+                                    text: 'Login',
                                   ),
                                 ],
                               ),
@@ -285,6 +271,43 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  const CustomButton({
+    super.key,
+    required this.isLoading,
+    required this.onPressed,
+    required this.text,
+  });
+
+  final bool isLoading;
+  final String text;
+  final void Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: MaterialButton(
+        onPressed: onPressed,
+        height: 50,
+        minWidth: double.infinity,
+        color: Colors.black38,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: isLoading
+            ? const CircularProgressIndicator(
+                color: white,
+              )
+            : Text(
+                text,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
       ),
     );
   }

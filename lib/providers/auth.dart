@@ -9,9 +9,10 @@ class Auth extends ChangeNotifier {
   bool isEqual = false;
   bool isVisible = false;
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> _authenticate(
+      String email, String password, String urlSegment) async {
     Uri url = Uri.parse(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDHbS279TE1vD_P7X6L5ebG4KLtCpV3OR4');
+        'https://identitytoolkit.googleapis.com/v1/$urlSegment?key=AIzaSyDHbS279TE1vD_P7X6L5ebG4KLtCpV3OR4');
     final response = await http.post(
       url,
       body: json.encode({
@@ -20,7 +21,15 @@ class Auth extends ChangeNotifier {
         'returnSecureToken': true,
       }),
     );
-    print(json.decode(response.body));
+    print(jsonDecode(response.body));
+  }
+
+  Future<void> signUp(String email, String password) async {
+    return _authenticate(email, password, 'accounts:signUp');
+  }
+
+  Future<void> login(String email, String password) async {
+    return _authenticate(email, password, 'accounts:signInWithPassword');
   }
 
   void validator(String pass, String cnfPass) {
