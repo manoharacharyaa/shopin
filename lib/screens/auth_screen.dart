@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shopin/colors/colors.dart';
+import 'package:shopin/providers/auth.dart';
+import 'package:shopin/widgets/custom_formfield.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -10,9 +13,6 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   int? tabVal;
-  bool isVisible = false;
-  bool isEqual = false;
-  bool _isLoading = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController loginEmailController = TextEditingController();
@@ -21,28 +21,17 @@ class _AuthScreenState extends State<AuthScreen> {
   TextEditingController signupPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  final Map<String, String> _authData = {
-    'email': '',
-    'password': '',
-  };
-
   void _submit() {
     if (!_formKey.currentState!.validate()) {
       return;
     }
     _formKey.currentState?.save();
-
-    // setState(() {
-    //   _isLoading = true;
-    // });
-    // setState(() {
-    //   _isLoading = false;
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.sizeOf(context);
+    final auth = Provider.of<Auth>(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -129,7 +118,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   CustomFormField(
                                     deviceSize: deviceSize,
                                     hintText: 'Password',
-                                    obscureText: isVisible ? false : true,
+                                    obscureText: auth.isVisible ? false : true,
                                     controller: signupPasswordController,
                                     validator: (value) {
                                       if (value!.isEmpty || value.length < 5) {
@@ -139,25 +128,17 @@ class _AuthScreenState extends State<AuthScreen> {
                                     },
                                     suffixIcon: IconButton(
                                       onPressed: () {
-                                        setState(() {
-                                          isVisible = !isVisible;
-                                        });
+                                        auth.visible();
                                       },
-                                      icon: isVisible
+                                      icon: auth.isVisible
                                           ? const Icon(Icons.visibility)
                                           : const Icon(Icons.visibility_off),
                                     ),
                                     onChanged: (_) {
-                                      if (signupEmailController.text !=
-                                          confirmPasswordController.text) {
-                                        setState(() {
-                                          isEqual = false;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          isEqual = true;
-                                        });
-                                      }
+                                      auth.validator(
+                                        signupPasswordController.text,
+                                        confirmPasswordController.text,
+                                      );
                                     },
                                   ),
                                   const SizedBox(height: 25),
@@ -174,21 +155,15 @@ class _AuthScreenState extends State<AuthScreen> {
                                       return null;
                                     },
                                     onChanged: (_) {
-                                      if (signupPasswordController.text !=
-                                          confirmPasswordController.text) {
-                                        setState(() {
-                                          isEqual = false;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          isEqual = true;
-                                        });
-                                      }
+                                      auth.validator(
+                                        signupPasswordController.text,
+                                        confirmPasswordController.text,
+                                      );
                                     },
                                     suffixIcon:
                                         confirmPasswordController.text.isEmpty
                                             ? null
-                                            : isEqual == true
+                                            : auth.isEqual == true
                                                 ? const Icon(
                                                     Icons.check_circle,
                                                     color: green,
@@ -235,15 +210,12 @@ class _AuthScreenState extends State<AuthScreen> {
                                       }
                                       return null;
                                     },
-                                    onSaved: (value) {
-                                      _authData['email'] = value!;
-                                    },
                                   ),
                                   const SizedBox(height: 25),
                                   CustomFormField(
                                     deviceSize: deviceSize,
                                     hintText: 'Password',
-                                    obscureText: isVisible ? false : true,
+                                    obscureText: auth.isVisible ? false : true,
                                     controller: loginPasswordController,
                                     validator: (value) {
                                       if (value!.isEmpty || value.length < 5) {
@@ -251,16 +223,11 @@ class _AuthScreenState extends State<AuthScreen> {
                                       }
                                       return null;
                                     },
-                                    onSaved: (value) {
-                                      _authData['password'] = value!;
-                                    },
                                     suffixIcon: IconButton(
                                       onPressed: () {
-                                        setState(() {
-                                          isVisible = !isVisible;
-                                        });
+                                        auth.visible();
                                       },
-                                      icon: isVisible
+                                      icon: auth.isVisible
                                           ? const Icon(Icons.visibility)
                                           : const Icon(Icons.visibility_off),
                                     ),
@@ -295,68 +262,6 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomFormField extends StatelessWidget {
-  const CustomFormField({
-    super.key,
-    required this.deviceSize,
-    required this.hintText,
-    required this.controller,
-    this.obscureText = false,
-    this.onPressed,
-    this.icon,
-    this.suffixIcon,
-    this.keyboardType,
-    this.onSaved,
-    this.validator,
-    this.onChanged,
-  });
-
-  final String hintText;
-  final Size deviceSize;
-  final bool obscureText;
-  final TextEditingController controller;
-  final void Function()? onPressed;
-  final IconData? icon;
-  final Widget? suffixIcon;
-  final TextInputType? keyboardType;
-  final void Function(String?)? onSaved;
-  final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextFormField(
-            controller: controller,
-            obscureText: obscureText,
-            keyboardType: keyboardType,
-            style: Theme.of(context).textTheme.bodySmall,
-            decoration: InputDecoration(
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: white,
-                ),
-              ),
-              hintText: hintText,
-              hintStyle: Theme.of(context).textTheme.bodySmall,
-              suffixIcon: suffixIcon,
-            ),
-            cursorColor: white,
-            cursorErrorColor: Colors.red,
-            onSaved: onSaved,
-            validator: validator,
-            onChanged: onChanged,
           ),
         ],
       ),
