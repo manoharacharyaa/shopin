@@ -42,8 +42,8 @@ class Products extends ChangeNotifier {
 
   // var _showFavouritsOnly = false;
 
-  final String? authToken; 
-  Products({this.authToken});
+  final String? authToken;
+  Products(this.authToken, this._items);
 
   List<Product> get items {
     // if (_showFavouritsOnly) {
