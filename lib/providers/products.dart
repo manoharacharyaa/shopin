@@ -73,9 +73,11 @@ class Products extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  Future<void> fetchAndSetProduct() async {
+  Future<void> fetchAndSetProduct([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url =
-        'https://shopin-379ad-default-rtdb.firebaseio.com/products.json?auth=$authToken';
+        'https://shopin-379ad-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString';
     Uri uri = Uri.parse(url);
     try {
       final response = await http.get(Uri.parse(url));
@@ -121,6 +123,7 @@ class Products extends ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
+          'creatorId': userId,
         }),
       );
       final newProduct = Product(
