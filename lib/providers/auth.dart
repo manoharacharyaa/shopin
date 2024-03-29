@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,7 @@ class Auth extends ChangeNotifier {
   String? _token;
   DateTime? _expiryDate;
   String? _userId;
+  Timer? _authTimer;
   bool isEqual = false;
   bool isVisible = false;
 
@@ -54,7 +56,7 @@ class Auth extends ChangeNotifier {
           seconds: int.parse(responseData['expiresIn']),
         ),
       );
-      print(json.decode(response.body));
+      _autoLogout();
       notifyListeners();
     } catch (e) {
       print(e.toString());
@@ -88,6 +90,18 @@ class Auth extends ChangeNotifier {
     _token = null;
     _userId = null;
     _expiryDate = null;
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+      _authTimer = null;
+    }
     notifyListeners();
+  }
+
+  void _autoLogout() {
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+    }
+    final timeToExpiry = _expiryDate!.difference(DateTime.now()).inSeconds;
+    _authTimer = Timer(Duration(seconds: timeToExpiry), logout);
   }
 }
