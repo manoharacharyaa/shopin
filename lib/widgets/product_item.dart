@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopin/colors/colors.dart';
+import 'package:shopin/providers/auth.dart';
 import 'package:shopin/providers/cart.dart';
 import 'package:shopin/providers/product.dart';
 import 'package:shopin/screens/product_details_screen.dart';
@@ -12,6 +13,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
     final cart = Provider.of<Cart>(context);
+    final authData = Provider.of<Auth>(context, listen: false);
     // final product = context.read<Product>();
     // final cart = context.watch<Cart>();
 
@@ -30,7 +32,10 @@ class ProductItem extends StatelessWidget {
             leading: Consumer<Product>(
               builder: (context, product, child) => IconButton(
                 onPressed: () {
-                  product.toggleFavouriteStatus();
+                  product.toggleFavouriteStatus(
+                    authData.token,
+                    authData.userId,
+                  );
                 },
                 icon: product.isFavourite
                     ? const Icon(Icons.favorite)
