@@ -26,7 +26,7 @@ class Auth extends ChangeNotifier {
   }
 
   String get userId {
-    return _userId!;
+    return _userId ?? '';
   }
 
   Future<void> _authenticate(
@@ -81,6 +81,13 @@ class Auth extends ChangeNotifier {
 
   void visible() {
     isVisible = !isVisible;
+    notifyListeners();
+  }
+
+  void logout() {
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
     notifyListeners();
   }
 }
