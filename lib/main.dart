@@ -14,6 +14,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:shopin/screens/edit_product_screen.dart';
 import 'package:shopin/screens/product_details_screen.dart';
 import 'package:shopin/screens/products_overview_screen.dart';
+import 'package:shopin/screens/splash_screen.dart';
 import 'package:shopin/screens/user_product_screen.dart';
 
 void main() async {
@@ -85,8 +86,16 @@ class MyApp extends StatelessWidget {
             ),
           ),
           // home: const ProductsOverviewScreen(),
-          home:
-              auth.isAuth ? const ProductsOverviewScreen() : const AuthScreen(),
+          home: auth.isAuth
+              ? const ProductsOverviewScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (context, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? const SplashScreen()
+                          : const AuthScreen(),
+                ),
           routes: {
             ProductDetailsScreen.routeName: (context) =>
                 const ProductDetailsScreen(),
